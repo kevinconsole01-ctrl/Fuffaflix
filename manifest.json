@@ -1,6 +1,6 @@
 {
-  "name": "Caponioflix Premium",
-  "short_name": "Caponioflix",
+  "name": "Fuffaflix",
+  "short_name": "Fuffaflix",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

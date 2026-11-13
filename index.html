@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caponioflix Premium</title>
+    <title>Fuffaflix</title>
     <link rel="icon" type="image/png" href="Nuovo progetto (1).png">
 
     <!-- PWA: consente di aprire il sito come app a schermo intero (senza barra indirizzi) una volta aggiunto alla home -->
@@ -13,7 +13,7 @@
     <!-- iOS (Safari) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Caponioflix">
+    <meta name="apple-mobile-web-app-title" content="Fuffaflix">
     <link rel="apple-touch-icon" href="Nuovo progetto (1).png">
 
     <!-- Android (Chrome) -->
@@ -3115,6 +3115,11 @@
             display: none !important;
         }
 
+        /* Con filtri attivi i caroselli di categoria non filtrati non devono confondere i risultati */
+        body.nf-filters-active .nf-extra-rows {
+            display: none !important;
+        }
+
         .content-stack .section-title {
             font-family: inherit !important;
             font-size: clamp(1.05rem, 1.35vw, 1.55rem) !important;
@@ -3342,32 +3347,6 @@
             text-overflow: ellipsis;
             max-height: 2.6em;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-        }
-
-        .card-item::after {
-            content: '▶';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.7);
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.92);
-            color: #000000;
-            font-size: 1rem;
-            line-height: 46px;
-            text-align: center;
-            padding-left: 3px;
-            opacity: 0;
-            transition: opacity 180ms ease, transform 220ms ease;
-            pointer-events: none;
-            z-index: 4;
-        }
-
-        .card-item:hover::after {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
         }
 
         .card-item:hover:not(:focus) {
@@ -4480,8 +4459,8 @@
 </head>
 <body class="nf-home">
 <div id="splashScreen">
-    <img src="./logo.png" alt="Caponioflix" class="splash-logo" id="splashLogoImg" onerror="this.style.display='none'; document.getElementById('splashLogoFallback').style.display='block';">
-    <span class="splash-logo-fallback" id="splashLogoFallback" style="display:none;">CAPONIOFLIX</span>
+    <img src="./logo.png" alt="Fuffaflix" class="splash-logo" id="splashLogoImg" onerror="this.style.display='none'; document.getElementById('splashLogoFallback').style.display='block';">
+    <span class="splash-logo-fallback" id="splashLogoFallback" style="display:none;">FUFFAFLIX</span>
 </div>
 
 <div class="main-layout">
@@ -4489,8 +4468,8 @@
         <div class="nf-nav">
             <div class="logo-wrapper">
                 <a href="index.html" class="logo-link" aria-label="Torna alla home">
-                    <img src="./logo.png" alt="Caponioflix" class="app-logo" id="logoImg" onerror="handleLogoError()">
-                    <span class="logo-fallback" id="logoText" style="display: none;">CAPONIOFLIX</span>
+                    <img src="./logo.png" alt="Fuffaflix" class="app-logo" id="logoImg" onerror="handleLogoError()">
+                    <span class="logo-fallback" id="logoText" style="display: none;">FUFFAFLIX</span>
                 </a>
             </div>
 
@@ -4567,8 +4546,8 @@
                 </div>
                 <div class="nf-hero-vignette"></div>
                 <div class="nf-hero-inner">
-                    <div class="nf-hero-badge"><span class="nf-badge-n">C</span> Caponioflix</div>
-                    <h1 class="nf-hero-title" id="nfHeroTitle">Caponioflix</h1>
+                    <div class="nf-hero-badge"><span class="nf-badge-n">F</span> Fuffaflix</div>
+                    <h1 class="nf-hero-title" id="nfHeroTitle">Fuffaflix</h1>
                     <div class="nf-hero-meta" id="nfHeroMeta">
                         <span class="nf-match">98% consigliato</span>
                         <span>Film e serie TV senza limiti</span>
@@ -4617,6 +4596,7 @@
                 <div class="results-grid" id="resultsList">
                     <div class="status-msg">Caricamento contenuti in corso...</div>
                 </div>
+                <div id="nfMoreRows" class="nf-extra-rows"></div>
                 <div class="load-more-container">
                     <button class="btn-load-more" id="btnLoadMore" onclick="caricaAltriRisultati()" style="display: none;" tabindex="0" aria-label="Carica altri titoli" title="Carica altri titoli">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -4653,10 +4633,34 @@
     let selectedYearMin = YEAR_MIN;
     let selectedYearMax = YEAR_MAX;
     const SEARCH_DEBOUNCE_MS = 500;
-    const FAVORITES_STORAGE_KEY = 'caponioflix_favorites';
-    const CONTINUE_STORAGE_KEY = 'caponioflix_continue_watching';
-    const TASTE_STORAGE_KEY = 'caponioflix_gusti_profilo';
-    const TASTE_SEEN_KEY = 'caponioflix_gusti_visti';
+    const FAVORITES_STORAGE_KEY = 'fuffaflix_favorites';
+    const CONTINUE_STORAGE_KEY = 'fuffaflix_continue_watching';
+    const TASTE_STORAGE_KEY = 'fuffaflix_gusti_profilo';
+    const TASTE_SEEN_KEY = 'fuffaflix_gusti_visti';
+
+    // Migrazione dei dati salvati con il vecchio nome, per non perdere
+    // preferiti, "Continua a guardare" e profilo dei gusti.
+    (function migraDatiPrecedenti() {
+        const chiavi = [
+            [FAVORITES_STORAGE_KEY, 'caponioflix_favorites'],
+            [CONTINUE_STORAGE_KEY, 'caponioflix_continue_watching'],
+            [TASTE_STORAGE_KEY, 'caponioflix_gusti_profilo'],
+            [TASTE_SEEN_KEY, 'caponioflix_gusti_visti']
+        ];
+        try {
+            chiavi.forEach(([chiaveNuova, chiaveVecchia]) => {
+                if (localStorage.getItem(chiaveNuova) === null) {
+                    const valore = localStorage.getItem(chiaveVecchia);
+                    if (valore !== null) {
+                        localStorage.setItem(chiaveNuova, valore);
+                        localStorage.removeItem(chiaveVecchia);
+                    }
+                }
+            });
+        } catch {
+            /* storage non disponibile: si continua senza migrazione */
+        }
+    })();
     let debounceTimer;
     let favorites = [];
     let continueWatching = [];
@@ -5180,31 +5184,34 @@
             { id: 18, label: 'Dramma' },
             { id: 10751, label: 'Famiglia' },
             { id: 14, label: 'Fantasy' },
+            { id: 36, label: 'Storico' },
             { id: 27, label: 'Horror' },
             { id: 10402, label: 'Musica' },
+            { id: 9648, label: 'Mistero' },
             { id: 10749, label: 'Romantico' },
             { id: 878, label: 'Fantascienza' },
             { id: 53, label: 'Thriller' },
             { id: 10752, label: 'Guerra' },
-            { id: 37, label: 'Western' }
+            { id: 37, label: 'Western' },
+            { id: 10770, label: 'Film TV' }
         ],
         tv: [
             { id: null, label: 'Tutti' },
-            { id: 10759, label: 'Azione' },
+            { id: 10759, label: 'Azione e avventura' },
             { id: 16, label: 'Animazione' },
             { id: 35, label: 'Commedia' },
             { id: 80, label: 'Crime' },
             { id: 99, label: 'Documentario' },
             { id: 18, label: 'Dramma' },
             { id: 10751, label: 'Famiglia' },
-            { id: 10765, label: 'Fantascienza' },
+            { id: 10765, label: 'Fantascienza e fantasy' },
             { id: 10762, label: 'Kids' },
-            { id: 9648, label: 'Mystery' },
+            { id: 9648, label: 'Mistero' },
             { id: 10763, label: 'News' },
             { id: 10764, label: 'Reality' },
-            { id: 10766, label: 'Talk' },
-            { id: 10767, label: 'War & Politics' },
-            { id: 10768, label: 'Guerra' },
+            { id: 10766, label: 'Soap opera' },
+            { id: 10767, label: 'Talk show' },
+            { id: 10768, label: 'Guerra e politica' },
             { id: 37, label: 'Western' }
         ]
     };
@@ -6124,6 +6131,9 @@
     }
 
     function setGenreFilter(genreId) {
+        // Un filtro applicato deve avere effetto: se c'è una ricerca attiva,
+        // la si chiude e si mostra il catalogo filtrato.
+        azzeraRicercaPerFiltri();
         selectedGenreId = genreId;
         renderGenreTags();
         if (window.innerWidth <= 900) {
@@ -6133,6 +6143,7 @@
             overlay?.classList.remove('is-open');
         }
         ricaricaLista(true);
+        portaInVistaRisultati();
     }
 
     function renderProviderTags() {
@@ -6159,6 +6170,7 @@
     }
 
     function setProviderFilter(providerId) {
+        azzeraRicercaPerFiltri();
         selectedProviderId = providerId;
         renderProviderTags();
         if (window.innerWidth <= 900) {
@@ -6168,6 +6180,7 @@
             overlay?.classList.remove('is-open');
         }
         ricaricaLista(true);
+        portaInVistaRisultati();
     }
 
     function getProviderLabel(id) {
@@ -6211,8 +6224,13 @@
             selectedYearMax = parseInt(maxInput.value, 10);
             updateYearSliderUI();
         });
-        minInput.addEventListener('change', () => ricaricaLista(true));
-        maxInput.addEventListener('change', () => ricaricaLista(true));
+        const applicaAnno = () => {
+            azzeraRicercaPerFiltri();
+            ricaricaLista(true);
+            portaInVistaRisultati();
+        };
+        minInput.addEventListener('change', applicaAnno);
+        maxInput.addEventListener('change', applicaAnno);
     }
 
     function resetFiltri() {
@@ -6234,6 +6252,48 @@
         return !!selectedGenreId || !!selectedProviderId || selectedYearMin !== YEAR_MIN || selectedYearMax !== YEAR_MAX;
     }
 
+    // Chiude la ricerca attiva: i filtri della sidebar lavorano sul catalogo,
+    // non sui risultati testuali (che TMDB non permette di filtrare per provider/anno).
+    function azzeraRicercaPerFiltri() {
+        const input = document.getElementById('searchInput');
+        if (input && input.value.trim()) {
+            input.value = '';
+            aggiornaVisibilitaClearRicerca();
+        }
+        isSearchMode = false;
+        document.body.classList.remove('nf-has-query');
+    }
+
+    // Quando si avvia una ricerca testuale si azzerano i filtri, così non restano
+    // selezionati ma inattivi (prima venivano semplicemente ignorati).
+    function azzeraFiltriPerRicerca() {
+        selectedGenreId = null;
+        selectedProviderId = null;
+        selectedYearMin = YEAR_MIN;
+        selectedYearMax = YEAR_MAX;
+
+        const minInput = document.getElementById('yearMinInput');
+        const maxInput = document.getElementById('yearMaxInput');
+        if (minInput) minInput.value = YEAR_MIN;
+        if (maxInput) maxInput.value = YEAR_MAX;
+
+        updateYearSliderUI();
+        renderGenreTags();
+        renderProviderTags();
+    }
+
+    // Dopo l'applicazione di un filtro porta l'utente sui risultati, altrimenti
+    // restando in cima sembra che il filtro non abbia fatto nulla.
+    function portaInVistaRisultati() {
+        const section = document.getElementById('popularSection');
+        const stack = document.querySelector('.content-stack');
+        if (!section || !stack) return;
+        const sectionRect = section.getBoundingClientRect();
+        const stackRect = stack.getBoundingClientRect();
+        const top = stack.scrollTop + sectionRect.top - stackRect.top - 80;
+        stack.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
+
     function buildFilterBadge() {
         const parts = [];
         if (selectedGenreId) parts.push(getGenreLabel(selectedGenreId));
@@ -6247,6 +6307,10 @@
     function aggiornaTitoloGriglia() {
         const query = document.getElementById('searchInput').value.trim();
         const tipo = currentType === 'movie' ? 'Film' : 'Serie TV';
+
+        // Nasconde i caroselli di categoria quando ci sono filtri attivi,
+        // così si vedono solo contenuti coerenti con il filtro scelto.
+        document.body.classList.toggle('nf-filters-active', !query && hasActiveDiscoverFilters());
         if (query) {
             const badge = selectedGenreId ? ` · ${getGenreLabel(selectedGenreId)}` : '';
             document.getElementById('gridTitle').innerText = `Risultati per "${query}"${badge}`;
@@ -6818,8 +6882,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
         if (reset) {
             currentPage = 1;
             risultatiRicerca = [];
-            selectedGenreId = null;
-            renderGenreTags();
+            azzeraFiltriPerRicerca();
             document.getElementById('resultsList').innerHTML = '<div class="status-msg">Ricerca in corso...</div>';
         }
         aggiornaTitoloGriglia();
@@ -6836,6 +6899,15 @@ async function fetchRecommendations(id, mediaType = currentType) {
     function caricaAltriRisultati() {
         currentPage++;
         const query = document.getElementById('searchInput').value.trim();
+
+        // Oltre ad altri titoli, aggiunge nuovi caroselli con altre categorie
+        // quando siamo nella home senza ricerca/filtri attivi.
+        if (currentView === 'home' && !isSearchMode && !query && !hasActiveDiscoverFilters()) {
+            if (typeof window.nfLoadMoreCategoryRows === 'function') {
+                window.nfLoadMoreCategoryRows();
+            }
+        }
+
         if (isSearchMode && query) {
             cercaConPersone(query, currentPage).then(results => {
                 fetchEPopola(results, false, null);
@@ -7302,7 +7374,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
         <button class="auth-modal-close" type="button" onclick="chiudiModaleAccount()" aria-label="Chiudi">✕</button>
 
         <div class="auth-modal-header">
-            <span class="auth-modal-brand">CAPONIO<span>FLIX</span></span>
+            <span class="auth-modal-brand">FUFFA<span>FLIX</span></span>
             <span class="auth-modal-brand-sub">Account</span>
         </div>
         <div class="auth-modal-tear"></div>
@@ -7441,7 +7513,8 @@ async function fetchRecommendations(id, mediaType = currentType) {
     const nf$ = (id) => document.getElementById(id);
 
     /* ---------- Loghi dei titoli (TMDB) ---------- */
-    const NF_LOGO_STORAGE_KEY = 'caponioflix_logo_cache_v1';
+    const NF_LOGO_STORAGE_KEY = 'fuffaflix_logo_cache_v1';
+    const NF_LOGO_STORAGE_KEY_LEGACY = 'caponioflix_logo_cache_v1';
     const nfLogoCache = new Map();
     const nfLogoPending = new Map();
     const nfLogoQueue = [];
@@ -7463,7 +7536,8 @@ async function fetchRecommendations(id, mediaType = currentType) {
 
     function nfLoadLogoCache() {
         try {
-            const raw = localStorage.getItem(NF_LOGO_STORAGE_KEY);
+            const raw = localStorage.getItem(NF_LOGO_STORAGE_KEY)
+                || localStorage.getItem(NF_LOGO_STORAGE_KEY_LEGACY);
             if (!raw) return;
             const parsed = JSON.parse(raw);
             Object.keys(parsed).forEach((key) => {
@@ -7673,7 +7747,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
 
         nfHeroItem = item;
         const type = item.type || currentType;
-        const title = (type === 'movie' ? item.title : item.name) || item.title || item.name || 'Caponioflix';
+        const title = (type === 'movie' ? item.title : item.name) || item.title || item.name || 'Fuffaflix';
         const date = type === 'movie' ? item.release_date : item.first_air_date;
         const year = date ? String(date).slice(0, 4) : '';
         const vote = item.vote_average ? `${Math.round(item.vote_average * 10)}% consigliato` : 'Novità';
@@ -7688,7 +7762,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
         if (!hero || !img || !titleEl || !metaEl || !overviewEl) return;
 
         titleEl.textContent = title;
-        overviewEl.textContent = overview || 'Guarda ora su Caponioflix: film e serie TV scelti per te.';
+        overviewEl.textContent = overview || 'Guarda ora su Fuffaflix: film e serie TV scelti per te.';
         metaEl.innerHTML = [
             `<span class="nf-match">${vote}</span>`,
             year ? `<span>${year}</span>` : '',
@@ -7744,15 +7818,102 @@ async function fetchRecommendations(id, mediaType = currentType) {
             { title: 'Azione e avventura', genre: 28 },
             { title: 'Commedie da non perdere', genre: 35 },
             { title: 'Drammi acclamati', genre: 18 },
-            { title: 'Fantascienza e fantasy', genre: 878 }
+            { title: 'Fantascienza e fantasy', genre: 878 },
+            // Categorie aggiuntive mostrate con "Carica altri titoli"
+            { title: 'Thriller e suspense', genre: 53 },
+            { title: 'Horror da brivido', genre: 27 },
+            { title: 'Storie d\'amore', genre: 10749 },
+            { title: 'Animazione per tutti', genre: 16 },
+            { title: 'Mistero e crimine', genre: 80 },
+            { title: 'Documentari imperdibili', genre: 99 },
+            { title: 'Film per tutta la famiglia', genre: 10751 },
+            { title: 'Guerra e storia', genre: 10752 },
+            { title: 'Western', genre: 37 },
+            { title: 'Avventura classica', genre: 12 }
         ],
         tv: [
             { title: 'Serie TV del momento', genre: 10759 },
             { title: 'Commedie TV', genre: 35 },
             { title: 'Drammi TV', genre: 18 },
-            { title: 'Mistero e fantascienza', genre: 9648 }
+            { title: 'Mistero e fantascienza', genre: 9648 },
+            // Categorie aggiuntive mostrate con "Carica altri titoli"
+            { title: 'Sci-Fi e fantasy', genre: 10765 },
+            { title: 'Crime e indagini', genre: 80 },
+            { title: 'Animazione TV', genre: 16 },
+            { title: 'Documentari TV', genre: 99 },
+            { title: 'Reality e intrattenimento', genre: 10764 },
+            { title: 'Serie per tutta la famiglia', genre: 10751 },
+            { title: 'Guerra e politica', genre: 10768 },
+            { title: 'Soap opera', genre: 10766 },
+            { title: 'Western', genre: 37 }
         ]
     };
+
+    // Generi usati per creare automaticamente molte categorie aggiuntive
+    // (genere + decennio), così le righe non finiscono dopo pochi clic.
+    const NF_GENRE_LABELS = {
+        movie: [
+            [28, 'Azione'], [12, 'Avventura'], [16, 'Animazione'], [35, 'Commedie'],
+            [80, 'Crime'], [99, 'Documentari'], [18, 'Drammi'], [10751, 'Famiglia'],
+            [14, 'Fantasy'], [36, 'Storico'], [27, 'Horror'], [10402, 'Musical'],
+            [9648, 'Mistero'], [10749, 'Romantici'], [878, 'Fantascienza'],
+            [53, 'Thriller'], [10752, 'Guerra'], [37, 'Western']
+        ],
+        tv: [
+            [10759, 'Azione e avventura'], [16, 'Animazione'], [35, 'Commedie'],
+            [80, 'Crime'], [99, 'Documentari'], [18, 'Drammi'], [10751, 'Famiglia'],
+            [10762, 'Kids'], [9648, 'Mistero'], [10764, 'Reality'], [10765, 'Sci-Fi e fantasy'],
+            [10766, 'Soap'], [10767, 'Talk show'], [10768, 'Guerra e politica'], [37, 'Western']
+        ]
+    };
+
+    const NF_DECADES = [
+        { label: "anni '50", from: 1950, to: 1959 },
+        { label: "anni '60", from: 1960, to: 1969 },
+        { label: "anni '70", from: 1970, to: 1979 },
+        { label: "anni '80", from: 1980, to: 1989 },
+        { label: "anni '90", from: 1990, to: 1999 },
+        { label: 'anni 2000', from: 2000, to: 2009 },
+        { label: 'anni 2010', from: 2010, to: 2019 },
+        { label: 'anni 2020', from: 2020, to: 2029 }
+    ];
+
+    const nfMoreRowPools = {};
+
+    function nfBuildMoreRowPool(type) {
+        // Partiamo dalle categorie curate, poi aggiungiamo tutte le combinazioni
+        // genere + decennio: decine e decine di caroselli per tipo.
+        const pool = (NF_HOME_ROWS[type] || [])
+            .slice(NF_INITIAL_ROW_COUNT)
+            .map((config) => ({ ...config, voteMin: 40 }));
+
+        (NF_GENRE_LABELS[type] || []).forEach(([genre, label]) => {
+            NF_DECADES.forEach((decade) => {
+                pool.push({
+                    title: `${label} ${decade.label}`,
+                    genre,
+                    yearFrom: decade.from,
+                    yearTo: decade.to,
+                    voteMin: 10
+                });
+            });
+        });
+
+        return pool;
+    }
+
+    function nfGetMoreRowPool(type) {
+        if (!nfMoreRowPools[type]) nfMoreRowPools[type] = nfBuildMoreRowPool(type);
+        return nfMoreRowPools[type];
+    }
+
+    // Le prime righe sono già in home; le altre vengono svelate dal tasto "Carica altri titoli".
+    const NF_INITIAL_ROW_COUNT = 4;
+    // Quante nuove categorie caricare a ogni clic su "Carica altri titoli".
+    const NF_MORE_ROWS_PER_CLICK = 4;
+    const nfMoreRowCursor = { movie: 0, tv: 0 };
+    let nfMoreRowsType = currentType;
+    let nfMoreRowsLoading = false;
 
     function nfBuildRow(title, items, type) {
         const block = document.createElement('section');
@@ -7823,7 +7984,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
 
         wrap.dataset.loading = type;
         wrap.dataset.type = type;
-        const configs = NF_HOME_ROWS[type] || [];
+        const configs = (NF_HOME_ROWS[type] || []).slice(0, NF_INITIAL_ROW_COUNT);
         if (!configs.length) {
             wrap.dataset.loading = '';
             return;
@@ -7851,6 +8012,90 @@ async function fetchRecommendations(id, mediaType = currentType) {
             }
         });
         nfEnsureAllRows();
+    }
+
+    /* ---------- Nuovi caroselli di categoria da "Carica altri titoli" ---------- */
+    function nfResetMoreRows() {
+        const wrap = nf$('nfMoreRows');
+        if (wrap) wrap.innerHTML = '';
+        nfMoreRowCursor.movie = 0;
+        nfMoreRowCursor.tv = 0;
+        nfMoreRowsType = currentType;
+        nfMoreRowsLoading = false;
+    }
+
+    async function nfLoadMoreCategoryRows() {
+        const wrap = nf$('nfMoreRows');
+        if (!wrap || nfMoreRowsLoading) return;
+        if (currentView !== 'home' || isSearchMode) return;
+
+        const type = currentType;
+        // Se nel frattempo è cambiato Film/Serie TV, ripartiamo da zero.
+        if (nfMoreRowsType !== type) {
+            wrap.innerHTML = '';
+            nfMoreRowCursor[type] = 0;
+            nfMoreRowsType = type;
+        }
+
+        const configs = nfGetMoreRowPool(type);
+        if (nfMoreRowCursor[type] >= configs.length) return;
+
+        nfMoreRowsLoading = true;
+        let cursor = nfMoreRowCursor[type];
+
+        const fetchConfig = async (config) => {
+            const dateField = type === 'movie' ? 'primary_release_date' : 'first_air_date';
+            let url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&language=it-IT&sort_by=popularity.desc&vote_count.gte=${config.voteMin || 40}&page=1&with_genres=${config.genre}`;
+            if (config.yearFrom) {
+                url += `&${dateField}.gte=${config.yearFrom}-01-01&${dateField}.lte=${config.yearTo}-12-31`;
+            }
+            try {
+                const response = await fetch(url);
+                if (!response.ok) return [];
+                const data = await response.json();
+                return (data.results || []).slice(0, 16);
+            } catch {
+                return [];
+            }
+        };
+
+        try {
+            const trovate = [];
+
+            // Ogni clic deve mostrare nuove categorie: se una categoria non ha
+            // risultati, si passa subito alla successiva fino a raggiungere il numero richiesto.
+            while (trovate.length < NF_MORE_ROWS_PER_CLICK && cursor < configs.length) {
+                const chunk = configs.slice(cursor, cursor + (NF_MORE_ROWS_PER_CLICK - trovate.length));
+                cursor += chunk.length;
+                const results = await Promise.all(chunk.map(fetchConfig));
+                if (currentType !== type) return;
+
+                results.forEach((items, index) => {
+                    if (items.length) trovate.push({ config: chunk[index], items });
+                });
+            }
+
+            nfMoreRowCursor[type] = cursor;
+
+            trovate.forEach(({ config, items }) => {
+                wrap.appendChild(nfBuildRow(config.title, items, type));
+            });
+
+            nfEnsureAllRows();
+        } finally {
+            nfMoreRowsLoading = false;
+        }
+    }
+
+    function nfInitLoadMoreResetHooks() {
+        ['caricaPopolari', 'caricaConFiltri', 'cerca'].forEach((name) => {
+            const original = window[name];
+            if (typeof original !== 'function') return;
+            window[name] = function (reset) {
+                if (reset) nfResetMoreRows();
+                return original.apply(this, arguments);
+            };
+        });
     }
 
     /* ---------- Caroselli orizzontali con frecce ---------- */
@@ -7996,6 +8241,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
         nfInitViewHook();
         nfInitRowObserver();
         nfInitFilterAutoClose();
+        nfInitLoadMoreResetHooks();
         nfRefreshBillboard();
 
         // Le righe extra vengono caricate dopo la prima griglia, senza bloccare la UI.
@@ -8006,6 +8252,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
             const originalSetType = window.setType;
             window.setType = function () {
                 const result = originalSetType.apply(this, arguments);
+                nfResetMoreRows();
                 setTimeout(() => nfLoadExtraRows(true), 500);
                 return result;
             };
@@ -8015,6 +8262,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
         window.nfHeroPlay = nfHeroPlay;
         window.nfHeroInfo = nfHeroInfo;
         window.nfRefreshBillboard = nfRefreshBillboard;
+        window.nfLoadMoreCategoryRows = nfLoadMoreCategoryRows;
     }
 
     if (document.readyState === 'loading') {

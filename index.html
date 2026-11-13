@@ -3804,19 +3804,53 @@
             max-width: 900px !important;
             padding: 0 !important;
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.75) !important;
-            overflow: hidden !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
             max-height: 92vh !important;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+        }
+
+        .rec-modal-card::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .rec-modal-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .rec-modal-card::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.26);
+            border-radius: 8px;
+            border: 2px solid #181818;
+        }
+
+        .rec-modal-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 12;
+            display: flex;
+            justify-content: flex-end;
+            height: 0;
+            padding: 0 12px;
+            pointer-events: none;
         }
 
         .rec-modal .trailer-modal-close {
+            position: relative !important;
             top: 12px !important;
-            right: 12px !important;
+            right: auto !important;
             width: 36px !important;
             height: 36px !important;
+            margin: 0 !important;
             background: #181818 !important;
             border: none !important;
             color: #ffffff !important;
             z-index: 10;
+            pointer-events: auto;
+            flex: 0 0 auto;
         }
 
         .rec-modal .trailer-modal-close:hover {
@@ -3826,13 +3860,13 @@
 
         .rec-modal-body {
             gap: 26px !important;
-            padding: 34px 34px 10px !important;
+            padding: 26px 34px 6px !important;
             align-items: flex-start !important;
         }
 
         .rec-modal .hero-poster {
-            width: 210px !important;
-            height: 315px !important;
+            width: 200px !important;
+            height: 300px !important;
             border-radius: 6px !important;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
         }
@@ -3964,7 +3998,7 @@
 
         .rec-modal-card > div:last-child {
             margin-top: 0 !important;
-            padding: 0 34px 30px !important;
+            padding: 0 34px 20px !important;
         }
 
         .rec-modal .recs-header {
@@ -3979,14 +4013,50 @@
         }
 
         #recsGrid {
-            padding: 6px 0 0 !important;
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            grid-template-columns: none !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            padding: 6px 0 6px !important;
             margin: 0 !important;
             gap: 8px !important;
+            scroll-snap-type: x proximity;
+            overscroll-behavior-x: contain;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+        }
+
+        #recsGrid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        #recsGrid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #recsGrid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.24);
+            border-radius: 8px;
+            border: 2px solid #181818;
         }
 
         #recsGrid .card-item {
-            flex-basis: clamp(120px, 12vw, 160px) !important;
-            width: clamp(120px, 12vw, 160px) !important;
+            flex: 0 0 clamp(140px, 12vw, 164px) !important;
+            width: clamp(140px, 12vw, 164px) !important;
+            scroll-snap-align: start;
+        }
+
+        #recsGrid.is-collapsed {
+            max-height: 0 !important;
+            min-height: 0 !important;
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            opacity: 0;
+            overflow: hidden !important;
+            pointer-events: none;
         }
 
         #recsGrid .card-item img {
@@ -4444,6 +4514,422 @@
             }
         }
 
+        /* ===================== SAGHE / COLLEZIONI ===================== */
+
+        #sagheSection {
+            display: none;
+            min-width: 0;
+        }
+
+        .saga-row-header {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px 16px;
+            padding: 0 4%;
+            margin-bottom: 12px;
+        }
+
+        .saga-row-header .section-title {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .saga-more-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: background-color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+        }
+
+        .saga-more-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.55);
+        }
+
+        .saga-more-btn:disabled {
+            opacity: 0.55;
+            cursor: default;
+        }
+
+        .saga-more-btn[hidden] {
+            display: none;
+        }
+
+        #sagheSection.is-ready {
+            display: block;
+        }
+
+        body:not(.nf-home) #sagheSection,
+        body.nf-has-query #sagheSection,
+        body.nf-filters-active #sagheSection,
+        body.nf-type-tv #sagheSection {
+            display: none !important;
+        }
+
+        .saga-card.card-item {
+            flex: 0 0 clamp(240px, 27vw, 340px) !important;
+            width: clamp(240px, 27vw, 340px) !important;
+        }
+
+        .saga-card .card-info {
+            padding-top: 58px !important;
+        }
+
+        .saga-card-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 4;
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(229, 9, 20, 0.94);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+        }
+
+        .saga-card-count {
+            margin-top: 3px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.66);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Sezione saga nel modal dettaglio */
+        .saga-block {
+            display: none;
+            min-width: 0;
+            max-width: calc(100% - 68px);
+            margin: 16px 34px 0;
+            padding: 14px 0 2px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .saga-block .section-title {
+            margin: 0 0 12px !important;
+            padding: 0 !important;
+            font-size: 1.05rem !important;
+        }
+
+        .saga-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 0 -3px;
+            padding: 2px 3px 8px;
+            scroll-snap-type: x proximity;
+            overscroll-behavior-x: contain;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.26) transparent;
+        }
+
+        .saga-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .saga-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .saga-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.22);
+            border-radius: 8px;
+            border: 2px solid #181818;
+        }
+
+        @media (max-width: 900px) {
+            .saga-block {
+                max-width: calc(100% - 40px);
+                margin: 14px 20px 0;
+                padding-top: 14px;
+            }
+        }
+
+        .saga-chapter {
+            flex: 0 0 108px;
+            cursor: pointer;
+            scroll-snap-align: start;
+            outline: none;
+        }
+
+        .saga-chapter img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #232323;
+            transition: transform 200ms ease, box-shadow 200ms ease, outline-color 200ms ease;
+        }
+
+        .saga-chapter:hover img,
+        .saga-chapter:focus-visible img {
+            transform: scale(1.04);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.65);
+        }
+
+        .saga-chapter.is-current img {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
+
+        .saga-chapter-title {
+            margin-top: 6px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            line-height: 1.25;
+            color: #e5e5e5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .saga-chapter-year {
+            margin-top: 2px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .saga-chapter-badge {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(229, 9, 20, 0.9);
+            color: #ffffff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .saga-loading {
+            padding: 8px 0 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Modal dedicato alla saga */
+        .saga-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 10003;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.88);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .saga-modal.is-open {
+            display: flex;
+            animation: modalBackdropIn var(--dur-base) var(--ease-out-smooth);
+        }
+
+        .saga-modal-card {
+            position: relative;
+            width: 100%;
+            max-width: 940px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #141414;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75);
+            cursor: default;
+            animation: modalContentIn var(--dur-slow) var(--ease-out-smooth);
+        }
+
+        .saga-modal-hero {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            min-height: 320px;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+            background: #101010;
+        }
+
+        .saga-modal-hero img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .saga-modal-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(10, 10, 10, 0.15) 0%, rgba(20, 20, 20, 0.55) 55%, #141414 100%),
+                linear-gradient(90deg, rgba(10, 10, 10, 0.75) 0%, rgba(10, 10, 10, 0) 70%);
+            pointer-events: none;
+        }
+
+        .saga-modal-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 620px;
+            padding: 34px clamp(18px, 4vw, 44px) 26px;
+        }
+
+        .saga-modal-eyebrow {
+            display: inline-block;
+            margin-bottom: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(229, 9, 20, 0.94);
+            color: #ffffff;
+            font-size: 0.64rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .saga-modal-title {
+            margin: 0;
+            font-size: clamp(1.65rem, 4vw, 2.6rem);
+            font-weight: 800;
+            line-height: 1.08;
+            color: #ffffff;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65);
+        }
+
+        .saga-modal-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 14px;
+            margin-top: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .saga-modal-overview {
+            margin: 12px 0 0;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: rgba(255, 255, 255, 0.82);
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .saga-modal-body {
+            padding: 22px clamp(18px, 4vw, 44px) 34px;
+        }
+
+        .saga-modal-body .section-title {
+            margin: 0 0 16px !important;
+            padding: 0 !important;
+            font-size: 1.1rem !important;
+        }
+
+        .saga-modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+            gap: 18px 14px;
+        }
+
+        .saga-modal-chapter {
+            cursor: pointer;
+            outline: none;
+        }
+
+        .saga-modal-chapter img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #232323;
+            transition: transform 200ms ease, box-shadow 200ms ease;
+        }
+
+        .saga-modal-chapter:hover img,
+        .saga-modal-chapter:focus-visible img {
+            transform: scale(1.04);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.65);
+        }
+
+        .saga-modal-chapter-title {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            line-height: 1.28;
+            color: #e5e5e5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .saga-modal-chapter-year {
+            margin-top: 2px;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        @media (max-width: 640px) {
+            .saga-modal {
+                padding: 0;
+                align-items: flex-end;
+            }
+
+            .saga-modal-card {
+                max-height: 92vh;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .saga-modal-hero {
+                min-height: 240px;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .saga-modal-hero-content {
+                padding: 24px 18px 20px;
+            }
+
+            .saga-modal-body {
+                padding: 18px 18px 28px;
+            }
+
+            .saga-modal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+                gap: 14px 10px;
+            }
+
+            .saga-chapter {
+                flex: 0 0 96px;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .nf-hero-inner,
             #splashScreen .splash-logo {
@@ -4568,6 +5054,14 @@
             </section>
 
             <div id="nfExtraRows" class="nf-extra-rows"></div>
+
+            <section class="nf-row-block" id="sagheSection" aria-label="Saghe da maratona">
+                <div class="saga-row-header">
+                    <h2 class="section-title">Saghe da maratona</h2>
+                    <button type="button" class="saga-more-btn" id="sagheMoreBtn" onclick="caricaAltreSaghe()" hidden>Mostra altre saghe</button>
+                </div>
+                <div class="results-grid" id="sagheRow" role="list"></div>
+            </section>
 
             <div class="favorites-section" id="favoritesSection">
                 <div class="section-title">La mia lista</div>
@@ -5160,6 +5654,87 @@
 
     let currentPlatformId = PLATFORMS[0].id;
     let platformDataCache = {};
+
+    // Collezioni/saghe TMDB mostrate subito in home (ordine curato).
+    const SAGHE_IDS = [
+        1241,   // Harry Potter
+        10,     // Star Wars
+        119,    // Il Signore degli Anelli
+        121938, // Lo Hobbit
+        9485,   // Fast & Furious
+        2344,   // Matrix
+        295,    // Pirati dei Caraibi
+        328,    // Jurassic Park
+        84,     // Indiana Jones
+        87359,  // Mission: Impossible
+        10194,  // Toy Story
+        2150,   // Shrek
+        1575,   // Rocky
+        528,    // Terminator
+        8091,   // Alien
+        264,    // Ritorno al futuro
+        230,    // Il Padrino
+        33514,  // Twilight
+        131635, // Hunger Games
+        404609, // John Wick
+        748,    // X-Men
+        556,    // Spider-Man
+        263,    // Batman (Dark Knight)
+        645,    // James Bond
+        8650,   // Transformers
+        86311,  // Avengers
+        86055,  // Men in Black
+        2980,   // Ghostbusters
+        31562,  // Jason Bourne
+        8945,   // Mad Max
+        173710  // Il pianeta delle scimmie (reboot)
+    ];
+
+    // Altre saghe, caricate solo su richiesta con "Mostra altre saghe".
+    const SAGHE_EXTRA_IDS = [
+        1570,   // Die Hard
+        399,    // Predator
+        86066,  // Cattivissimo me
+        89137,  // Dragon Trainer
+        1733,   // La mummia
+        1582,   // Tartarughe Ninja
+        126125, // I mercenari
+        304,    // Ocean's
+        5039,   // Rambo
+        945,    // Arma letale
+        14890,  // Bad Boys
+        313086, // The Conjuring
+        656,    // Saw
+        8864,   // Final Destination
+        17255,  // Resident Evil
+        2326,   // Underworld
+        735,    // Blade
+        2602,   // Scream
+        2806,   // American Pie
+        86119,  // Una notte da leoni
+        295130, // Maze Runner
+        283579, // Divergent
+        391860, // Kingsman
+        448150, // Deadpool
+        453993, // Wolverine
+        9744,   // I Fantastici 4
+        8537,   // Superman
+        535313, // Godzilla
+        382685, // Now You See Me
+        102322, // Sherlock Holmes
+        77816,  // Kung Fu Panda
+        14740,  // Madagascar
+        8354,   // L'era glaciale
+        87118,  // Cars
+        137696, // Monsters & Co.
+        468222, // Gli Incredibili
+        404825, // Ralph Spaccatutto
+        185103, // Hotel Transylvania
+        8580,   // Karate Kid
+        135468, // G.I. Joe
+        167613  // Alvin Superstar
+    ];
+    const SAGHE_EXTRA_PER_CLICK = 16;
 
     // Filtro "Servizio streaming": ID provider TMDB (dati sourced da JustWatch), catalogo regione IT
     const STREAMING_PROVIDERS = [
@@ -6534,12 +7109,374 @@ async function fetchRecommendations(id, mediaType = currentType) {
             card.onclick = () => selezionaItem(item);
             grid.appendChild(card);
         });
-        setRecsCollapsed(window.innerWidth <= 600);
+        setRecsCollapsed(false);
     } catch {
         headerEl.style.display = 'none';
         grid.innerHTML = '';
     }
 }
+
+    /* ===================== COLLEZIONI / SAGHE ===================== */
+
+    const sagheCache = new Map();
+    let sagheHomeCaricate = false;
+    let sagheExtraCursor = 0;
+    let sagheExtraLoading = false;
+    let sagaDettaglioToken = 0;
+    let sagaFocusPrecedente = null;
+
+    function nomeSagaPulito(nome) {
+        return (nome || 'Saga')
+            .replace(/\s*[-–—:]\s*(la\s+)?collezione\s*$/i, '')
+            .replace(/\s+collection\s*$/i, '')
+            .trim() || 'Saga';
+    }
+
+    function ordinaFilmSaga(parts) {
+        return (parts || []).slice().sort((a, b) => {
+            const dataA = a.release_date || '9999-12-31';
+            const dataB = b.release_date || '9999-12-31';
+            return dataA.localeCompare(dataB);
+        });
+    }
+
+    function annoFilmSaga(item) {
+        return item && item.release_date ? item.release_date.slice(0, 4) : '';
+    }
+
+    async function fetchSagaCollection(id) {
+        if (!id) return null;
+        if (sagheCache.has(id)) return sagheCache.get(id);
+        try {
+            const res = await fetch(`https://api.themoviedb.org/3/collection/${id}?api_key=${API_KEY}&language=it-IT`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            if (!data || !Array.isArray(data.parts) || !data.parts.length) return null;
+            sagheCache.set(id, data);
+            return data;
+        } catch {
+            return null;
+        }
+    }
+
+    function creaCardSaga(part, opzioni = {}) {
+        const modale = !!opzioni.modale;
+        const card = document.createElement('div');
+        card.className = modale ? 'saga-modal-chapter' : 'saga-chapter';
+        card.tabIndex = 0;
+        card.setAttribute('role', 'listitem');
+
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.alt = part.title || 'Film della saga';
+        img.src = part.poster_path
+            ? `https://image.tmdb.org/t/p/w342${part.poster_path}`
+            : 'https://via.placeholder.com/185x278?text=No+Cover';
+
+        const titolo = document.createElement('div');
+        titolo.className = modale ? 'saga-modal-chapter-title' : 'saga-chapter-title';
+        titolo.textContent = part.title || '';
+
+        const anno = document.createElement('div');
+        anno.className = modale ? 'saga-modal-chapter-year' : 'saga-chapter-year';
+        anno.textContent = annoFilmSaga(part);
+
+        card.appendChild(img);
+        card.appendChild(titolo);
+        if (anno.textContent) card.appendChild(anno);
+
+        if (opzioni.corrente) {
+            card.classList.add('is-current');
+            card.setAttribute('aria-current', 'true');
+            const badge = document.createElement('span');
+            badge.className = 'saga-chapter-badge';
+            badge.textContent = 'In questa saga';
+            card.appendChild(badge);
+        }
+
+        return card;
+    }
+
+    function creaCardSagaHome(saga) {
+        const parti = ordinaFilmSaga(saga.parts);
+        const nome = nomeSagaPulito(saga.name);
+        const copertina = saga.backdrop_path
+            || (parti.find((part) => part.backdrop_path) || {}).backdrop_path
+            || saga.poster_path;
+
+        const card = document.createElement('div');
+        card.className = 'card-item saga-card';
+        card.tabIndex = 0;
+        card.setAttribute('role', 'listitem');
+        card.setAttribute('aria-label', `Apri la saga ${nome}`);
+
+        const img = document.createElement('img');
+        img.className = 'card-img';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.alt = nome;
+        img.src = copertina
+            ? `https://image.tmdb.org/t/p/w780${copertina}`
+            : 'https://via.placeholder.com/342x192?text=Saga';
+        img.addEventListener('error', () => {
+            if (img.dataset.fallback) return;
+            img.dataset.fallback = '1';
+            const fallback = (parti.find((part) => part.poster_path) || {}).poster_path;
+            img.src = fallback
+                ? `https://image.tmdb.org/t/p/w342${fallback}`
+                : 'https://via.placeholder.com/185x278?text=Saga';
+        });
+
+        const badge = document.createElement('span');
+        badge.className = 'saga-card-badge';
+        badge.textContent = 'Saga';
+
+        const info = document.createElement('div');
+        info.className = 'card-info';
+        const titolo = document.createElement('div');
+        titolo.className = 'card-title';
+        titolo.textContent = nome;
+        const conteggio = document.createElement('div');
+        conteggio.className = 'saga-card-count';
+        conteggio.textContent = `${parti.length} film`;
+        info.appendChild(titolo);
+        info.appendChild(conteggio);
+
+        card.appendChild(img);
+        card.appendChild(badge);
+        card.appendChild(info);
+
+        const apri = () => apriSagaModal(saga);
+        card.addEventListener('click', apri);
+        card.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                apri();
+            }
+        });
+
+        return card;
+    }
+
+    function aggiornaBottoneAltreSaghe() {
+        const btn = document.getElementById('sagheMoreBtn');
+        if (!btn) return;
+        const rimaste = SAGHE_EXTRA_IDS.length - sagheExtraCursor;
+        btn.hidden = rimaste <= 0;
+        btn.disabled = false;
+        btn.textContent = rimaste > 0 ? `Mostra altre saghe (${rimaste})` : 'Tutte le saghe';
+    }
+
+    async function caricaAltreSaghe() {
+        if (sagheExtraLoading) return;
+        const row = document.getElementById('sagheRow');
+        const btn = document.getElementById('sagheMoreBtn');
+        if (!row || !btn) return;
+
+        const ids = SAGHE_EXTRA_IDS.slice(sagheExtraCursor, sagheExtraCursor + SAGHE_EXTRA_PER_CLICK);
+        if (!ids.length) {
+            btn.hidden = true;
+            return;
+        }
+
+        sagheExtraLoading = true;
+        btn.disabled = true;
+        btn.textContent = 'Caricamento...';
+
+        const raccolte = new Map();
+        const coda = [...ids];
+        const worker = async () => {
+            while (coda.length) {
+                const id = coda.shift();
+                const data = await fetchSagaCollection(id);
+                if (data && Array.isArray(data.parts) && data.parts.length >= 2) {
+                    raccolte.set(id, data);
+                }
+            }
+        };
+
+        await Promise.all([worker(), worker(), worker(), worker()]);
+
+        ids.forEach((id) => {
+            const saga = raccolte.get(id);
+            if (saga) row.appendChild(creaCardSagaHome(saga));
+        });
+
+        sagheExtraCursor += ids.length;
+        sagheExtraLoading = false;
+        aggiornaBottoneAltreSaghe();
+    }
+
+    async function caricaSagheHome() {
+        if (sagheHomeCaricate) return;
+        const section = document.getElementById('sagheSection');
+        const row = document.getElementById('sagheRow');
+        if (!section || !row) return;
+        sagheHomeCaricate = true;
+
+        const raccolte = new Map();
+        const coda = [...SAGHE_IDS];
+        const worker = async () => {
+            while (coda.length) {
+                const id = coda.shift();
+                const data = await fetchSagaCollection(id);
+                if (data && Array.isArray(data.parts) && data.parts.length >= 2) {
+                    raccolte.set(id, data);
+                }
+            }
+        };
+
+        await Promise.all([worker(), worker(), worker(), worker()]);
+
+        const saghe = SAGHE_IDS.map((id) => raccolte.get(id)).filter(Boolean);
+        if (!saghe.length) {
+            sagheHomeCaricate = false;
+            return;
+        }
+
+        row.innerHTML = '';
+        saghe.forEach((saga) => row.appendChild(creaCardSagaHome(saga)));
+
+        section.classList.add('is-ready');
+        aggiornaBottoneAltreSaghe();
+    }
+
+    function apriSagaModal(saga) {
+        if (!saga) return;
+        const modal = document.getElementById('sagaModal');
+        const grid = document.getElementById('sagaModalGrid');
+        if (!modal || !grid) return;
+
+        const parti = ordinaFilmSaga(saga.parts);
+        const nome = nomeSagaPulito(saga.name);
+        const copertina = saga.backdrop_path
+            || (parti.find((part) => part.backdrop_path) || {}).backdrop_path
+            || saga.poster_path;
+
+        sagaFocusPrecedente = document.activeElement;
+
+        const img = document.getElementById('sagaModalImg');
+        img.src = copertina ? `https://image.tmdb.org/t/p/w1280${copertina}` : '';
+        img.alt = nome;
+
+        document.getElementById('sagaModalTitle').textContent = nome;
+        document.getElementById('sagaModalOverview').textContent = saga.overview
+            || 'Tutti i film di questa saga, in ordine cronologico.';
+
+        const meta = document.getElementById('sagaModalMeta');
+        meta.innerHTML = '';
+        const conteggio = document.createElement('span');
+        conteggio.textContent = `${parti.length} film`;
+        meta.appendChild(conteggio);
+        const anni = parti.map(annoFilmSaga).filter(Boolean);
+        if (anni.length) {
+            const range = document.createElement('span');
+            range.textContent = anni[0] === anni[anni.length - 1]
+                ? anni[0]
+                : `${anni[0]}–${anni[anni.length - 1]}`;
+            meta.appendChild(range);
+        }
+
+        grid.innerHTML = '';
+        parti.forEach((part) => {
+            const card = creaCardSaga(part, { modale: true });
+            const apriFilm = () => {
+                chiudiSagaModal();
+                apriItemFresco({ ...part, type: 'movie' });
+            };
+            card.addEventListener('click', apriFilm);
+            card.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    apriFilm();
+                }
+            });
+            grid.appendChild(card);
+        });
+
+        modal.classList.add('is-open');
+        document.getElementById('sagaModalCloseBtn')?.focus({ preventScroll: true });
+    }
+
+    function chiudiSagaModal() {
+        const modal = document.getElementById('sagaModal');
+        if (modal) modal.classList.remove('is-open');
+        const img = document.getElementById('sagaModalImg');
+        if (img) img.src = '';
+        if (sagaFocusPrecedente && document.contains(sagaFocusPrecedente)) {
+            sagaFocusPrecedente.focus({ preventScroll: true });
+        }
+        sagaFocusPrecedente = null;
+    }
+
+    function nascondiSagaDettaglio() {
+        sagaDettaglioToken++;
+        const section = document.getElementById('sagaSection');
+        const grid = document.getElementById('sagaGrid');
+        if (section) section.style.display = 'none';
+        if (grid) grid.innerHTML = '';
+    }
+
+    async function aggiornaSagaDettaglio(collection, mediaType, currentId) {
+        const section = document.getElementById('sagaSection');
+        const grid = document.getElementById('sagaGrid');
+        const titolo = document.getElementById('sagaTitle');
+        if (!section || !grid || !titolo) return;
+
+        const token = ++sagaDettaglioToken;
+
+        if (mediaType !== 'movie' || !collection || !collection.id) {
+            section.style.display = 'none';
+            grid.innerHTML = '';
+            return;
+        }
+
+        section.style.display = 'block';
+        titolo.textContent = 'La saga';
+        grid.innerHTML = '<div class="saga-loading">Caricamento saga...</div>';
+
+        const data = await fetchSagaCollection(collection.id);
+        if (token !== sagaDettaglioToken) return;
+        if (!elementoSelezionato || elementoSelezionato.id !== currentId) return;
+
+        if (!data || !Array.isArray(data.parts) || data.parts.length < 2) {
+            section.style.display = 'none';
+            grid.innerHTML = '';
+            return;
+        }
+
+        const parti = ordinaFilmSaga(data.parts);
+        titolo.textContent = `La saga di ${nomeSagaPulito(data.name || collection.name)}`;
+        grid.innerHTML = '';
+
+        parti.forEach((part) => {
+            const card = creaCardSaga(part, { corrente: part.id === currentId });
+            const apri = () => selezionaItem({ ...part, type: 'movie' });
+            card.addEventListener('click', apri);
+            card.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    apri();
+                }
+            });
+            grid.appendChild(card);
+        });
+
+        section.style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const sagaModal = document.getElementById('sagaModal');
+        sagaModal?.addEventListener('click', (event) => {
+            if (event.target === sagaModal) chiudiSagaModal();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && sagaModal?.classList.contains('is-open')) {
+                chiudiSagaModal();
+            }
+        });
+    });
 
     function aggiornaStatoChiusuraRecModal() {
         const closeBtn = document.getElementById('recModalCloseBtn');
@@ -6693,6 +7630,9 @@ async function fetchRecommendations(id, mediaType = currentType) {
             clearTimeout(splashSafetyTimeout);
             nascondiSplashScreen();
         });
+
+        // Le saghe arrivano dopo la home, senza rallentare l'avvio.
+        setTimeout(caricaSagheHome, 1500);
     };
 
     function handleLogoError() {
@@ -6702,6 +7642,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
 
     function setType(type) {
         currentType = type;
+        document.body.classList.toggle('nf-type-tv', type === 'tv');
         document.getElementById('btnMovie').classList.toggle('active', type === 'movie');
         document.getElementById('btnTv').classList.toggle('active', type === 'tv');
         
@@ -7105,6 +8046,8 @@ async function fetchRecommendations(id, mediaType = currentType) {
         elementoSelezionato = item;
         if (!elementoSelezionato) return;
 
+        nascondiSagaDettaglio();
+
         const recModalEl = document.getElementById('recModal');
         const eraGiaAperto = recModalEl.classList.contains('is-open');
         recModalEl.classList.add('is-open');
@@ -7128,10 +8071,12 @@ async function fetchRecommendations(id, mediaType = currentType) {
         document.getElementById('heroOverview').innerText = elementoSelezionato.overview || 'Nessuna descrizione disponibile.';
 
         let runtimeMinutiRilevato = null;
+        let collectionCorrente = null;
         try {
             const detailRes = await fetch(`https://api.themoviedb.org/3/${mediaType}/${elementoSelezionato.id}?api_key=${API_KEY}&language=it-IT`);
             if (detailRes.ok) {
                 const details = await detailRes.json();
+                collectionCorrente = details.belongs_to_collection || null;
                 const runtime = mediaType === 'movie' ? details.runtime : '';
                 runtimeMinutiRilevato = runtime || null;
                 const countries = formatCountries(details.production_countries || []);
@@ -7143,6 +8088,8 @@ async function fetchRecommendations(id, mediaType = currentType) {
         } catch {
             document.getElementById('heroMeta').innerText = `${anno} • ${voto}`;
         }
+
+        aggiornaSagaDettaglio(collectionCorrente, mediaType, elementoSelezionato.id);
 
         const posterPath = elementoSelezionato.poster_path
             ? `https://image.tmdb.org/t/p/w342${elementoSelezionato.poster_path}`
@@ -7170,6 +8117,8 @@ async function fetchRecommendations(id, mediaType = currentType) {
         elementoSelezionato = risultatiRicerca[index];
         if (!elementoSelezionato) return;
 
+        nascondiSagaDettaglio();
+
         popupStack = [];
         aggiornaStatoChiusuraRecModal();
         document.getElementById('recModal').classList.add('is-open');
@@ -7190,10 +8139,12 @@ async function fetchRecommendations(id, mediaType = currentType) {
         document.getElementById('heroOverview').innerText = item.overview || 'Nessuna descrizione disponibile.';
 
         let runtimeMinutiRilevato = null;
+        let collectionCorrente = null;
         try {
             const detailRes = await fetch(`https://api.themoviedb.org/3/${tipoPerHero}/${item.id}?api_key=${API_KEY}&language=it-IT`);
             if (detailRes.ok) {
                 const details = await detailRes.json();
+                collectionCorrente = details.belongs_to_collection || null;
                 const runtime = tipoPerHero === 'movie' ? details.runtime : '';
                 runtimeMinutiRilevato = runtime || null;
                 const countries = formatCountries(details.production_countries || []);
@@ -7205,6 +8156,8 @@ async function fetchRecommendations(id, mediaType = currentType) {
         } catch {
             document.getElementById('heroMeta').innerText = `${anno} • ${voto}`;
         }
+
+        aggiornaSagaDettaglio(collectionCorrente, tipoPerHero, item.id);
 
         const posterPath = item.poster_path 
             ? `https://image.tmdb.org/t/p/w342${item.poster_path}`
@@ -7458,7 +8411,9 @@ async function fetchRecommendations(id, mediaType = currentType) {
 
 <div id="recModal" class="rec-modal" role="dialog" aria-modal="true" aria-label="Dettaglio titolo">
     <div class="rec-modal-card">
-        <button type="button" class="trailer-modal-close" id="recModalCloseBtn" onclick="chiudiPopupConsigliato()" aria-label="Chiudi">✕</button>
+        <div class="rec-modal-toolbar">
+            <button type="button" class="trailer-modal-close" id="recModalCloseBtn" onclick="chiudiPopupConsigliato()" aria-label="Chiudi">✕</button>
+        </div>
         <div class="rec-modal-body">
             <img class="hero-poster" id="heroPoster" src="https://via.placeholder.com/185x278?text=Caricamento..." alt="Poster">
             <div class="hero-details">
@@ -7487,12 +8442,36 @@ async function fetchRecommendations(id, mediaType = currentType) {
             </div>
         </div>
 
+        <section class="saga-block" id="sagaSection" aria-label="Film della saga">
+            <div class="section-title" id="sagaTitle">La saga</div>
+            <div class="saga-grid" id="sagaGrid" role="list"></div>
+        </section>
+
         <div style="min-width:0; margin-top:20px;">
             <div class="recs-header" id="recsHeader" style="display:none; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
                 <div class="section-title" id="recsTitle" style="margin:0;">Potrebbe piacerti anche</div>
                 <button class="recs-toggle" id="recsToggleBtn" type="button" onclick="toggleRecs()" aria-expanded="true">Nascondi ▴</button>
             </div>
             <div id="recsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(90px, 1fr)); gap:8px; width:100%;"></div>
+        </div>
+    </div>
+</div>
+
+<div id="sagaModal" class="saga-modal" role="dialog" aria-modal="true" aria-labelledby="sagaModalTitle">
+    <div class="saga-modal-card">
+        <button type="button" class="trailer-modal-close" id="sagaModalCloseBtn" onclick="chiudiSagaModal()" aria-label="Chiudi">✕</button>
+        <div class="saga-modal-hero">
+            <img id="sagaModalImg" src="" alt="">
+            <div class="saga-modal-hero-content">
+                <span class="saga-modal-eyebrow">Saga</span>
+                <h2 class="saga-modal-title" id="sagaModalTitle"></h2>
+                <div class="saga-modal-meta" id="sagaModalMeta"></div>
+                <p class="saga-modal-overview" id="sagaModalOverview"></p>
+            </div>
+        </div>
+        <div class="saga-modal-body">
+            <div class="section-title">I film della saga</div>
+            <div class="saga-modal-grid" id="sagaModalGrid" role="list"></div>
         </div>
     </div>
 </div>
@@ -8168,7 +9147,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
 
     function nfEnsureAllRows() {
         const rows = document.querySelectorAll(
-            '#resultsList, #favoritesGrid, #continueGrid, #platformGrid, #recsGrid, .consigliati-grid, .nf-extra-rows .results-grid'
+            '#resultsList, #sagheRow, #favoritesGrid, #continueGrid, #platformGrid, #recsGrid, .consigliati-grid, .nf-extra-rows .results-grid'
         );
         rows.forEach((row) => {
             // Le classifiche sono una griglia multiriga, non un carosello.

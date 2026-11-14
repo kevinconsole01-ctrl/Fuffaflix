@@ -3260,7 +3260,6 @@
 
         /* Griglie trasformate in caroselli orizzontali */
         .results-grid,
-        .favorites-grid,
         .continue-grid,
         .consigliati-grid,
         .platform-grid,
@@ -3985,13 +3984,25 @@
         }
 
         .btn-trailer {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 46px !important;
+            min-width: 46px !important;
+            height: 46px !important;
+            padding: 0 !important;
             background: rgba(109, 109, 110, 0.7) !important;
             border: none !important;
-            border-radius: 4px !important;
+            border-radius: 50% !important;
             color: #ffffff !important;
-            height: 46px;
-            padding: 0 20px !important;
             font-weight: 700 !important;
+        }
+
+        .btn-trailer svg {
+            display: block;
+            width: 21px;
+            height: 21px;
+            pointer-events: none;
         }
 
         .btn-trailer:hover {
@@ -4245,7 +4256,7 @@
         @media (max-width: 900px) {
             header {
                 height: auto !important;
-                padding: 8px 4% 0 !important;
+                padding: 8px 4% 6px !important;
                 flex-wrap: wrap;
                 background: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.78) 62%, rgba(0, 0, 0, 0) 100%) !important;
             }
@@ -4282,29 +4293,7 @@
             }
 
             .nf-nav-links {
-                order: 5;
-                width: 100%;
-                overflow-x: auto;
-                gap: 20px;
-                padding: 0 0 10px;
-                scrollbar-width: none;
-            }
-
-            .nf-nav-links::-webkit-scrollbar {
-                display: none;
-            }
-
-            .nf-nav-links .view-btn,
-            .nf-nav-links .type-btn {
-                line-height: 30px !important;
-                height: 30px !important;
-                font-size: 0.84rem !important;
-                flex: 0 0 auto;
-            }
-
-            .nf-nav-links .view-btn#continueViewBtn,
-            .nf-nav-links .view-btn#consigliatiViewBtn {
-                display: block;
+                display: none !important;
             }
 
             .search-box:focus-within,
@@ -4344,7 +4333,7 @@
             }
 
             body:not(.nf-home) .content-stack {
-                padding-top: 124px !important;
+                padding-top: 84px !important;
             }
 
             .nf-hero {
@@ -4969,6 +4958,316 @@
             }
         }
 
+        /* ===================== RISULTATI DI RICERCA (GRIGLIA) ===================== */
+        body.nf-has-query #resultsList {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+            align-items: start !important;
+            align-content: start;
+            gap: 14px !important;
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 4px 4% 30px !important;
+            overflow: visible !important;
+        }
+
+        body.nf-has-query #resultsList .card-item {
+            flex: none !important;
+            width: 100% !important;
+            max-width: none !important;
+            min-width: 0 !important;
+        }
+
+        body.nf-has-query #resultsList > .status-msg {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        body.nf-has-query .nf-row-arrow {
+            display: none !important;
+        }
+
+        @media (max-width: 900px) {
+            body.nf-has-query #resultsList {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+                gap: 10px !important;
+                padding: 4px 5% 26px !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            body.nf-has-query #resultsList {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+            }
+        }
+
+        /* ===================== LA MIA LISTA (GRIGLIA) ===================== */
+        #favoritesGrid.favorites-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+            align-items: start !important;
+            align-content: start;
+            gap: 14px !important;
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 4px 4% 30px !important;
+            overflow: visible !important;
+        }
+
+        #favoritesGrid .card-item.favorite-card {
+            flex: none !important;
+            width: 100% !important;
+            max-width: none !important;
+            min-width: 0 !important;
+        }
+
+        #favoritesGrid .card-item .card-img {
+            aspect-ratio: 16 / 9 !important;
+            height: auto !important;
+        }
+
+        #favoritesGrid > .favorites-empty {
+            grid-column: 1 / -1;
+            width: 100%;
+            padding: 24px 0 !important;
+        }
+
+        @media (max-width: 900px) {
+            #favoritesGrid.favorites-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+                gap: 10px !important;
+                padding: 4px 5% 26px !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            #favoritesGrid.favorites-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+            }
+        }
+
+        /* ===================== BOTTOM NAVIGATION (MOBILE) ===================== */
+        .nf-bottom-nav,
+        .nf-more-overlay,
+        .nf-more-menu {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .content-stack {
+                padding-bottom: max(12vh, calc(84px + env(safe-area-inset-bottom))) !important;
+            }
+
+            .nf-bottom-nav {
+                display: flex;
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 990;
+                align-items: stretch;
+                justify-content: space-around;
+                gap: 2px;
+                padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+                background: rgba(16, 16, 16, 0.96);
+                border-top: 1px solid rgba(255, 255, 255, 0.09);
+                -webkit-backdrop-filter: blur(16px);
+                backdrop-filter: blur(16px);
+                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
+            }
+
+            .nf-bottom-nav.is-search-hidden {
+                display: none !important;
+            }
+
+            .nf-bottom-btn {
+                position: relative;
+                flex: 1 1 0;
+                min-width: 0;
+                height: 54px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3px;
+                padding: 6px 2px 4px;
+                background: transparent;
+                border: none;
+                border-radius: 10px;
+                color: #8f8f8f;
+                font-size: 0.63rem;
+                font-weight: 600;
+                letter-spacing: 0.01em;
+                line-height: 1;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                transition: color 160ms ease, transform 160ms ease, background-color 160ms ease;
+            }
+
+            .nf-bottom-btn svg {
+                width: 23px;
+                height: 23px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 1.9;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                flex: 0 0 auto;
+            }
+
+            .nf-bottom-btn span {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .nf-bottom-btn:active {
+                transform: scale(0.94);
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            .nf-bottom-btn.active {
+                color: #ffffff;
+            }
+
+            .nf-bottom-btn.active::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 20px;
+                height: 3px;
+                border-radius: 0 0 4px 4px;
+                background: var(--nf-red);
+            }
+
+            .nf-bottom-btn.is-type-active {
+                color: #ffffff;
+            }
+
+            .nf-bottom-btn.is-type-active::after {
+                content: '';
+                position: absolute;
+                bottom: 3px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background: var(--nf-red);
+            }
+
+            .nf-more-overlay {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 1200;
+                background: rgba(0, 0, 0, 0.62);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 220ms ease;
+            }
+
+            .nf-more-overlay.is-open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .nf-more-menu {
+                display: block;
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1201;
+                padding: 10px 14px calc(18px + env(safe-area-inset-bottom));
+                background: #1b1b1b;
+                border-radius: 18px 18px 0 0;
+                box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.7);
+                transform: translateY(105%);
+                visibility: hidden;
+                pointer-events: none;
+                transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), visibility 280ms;
+            }
+
+            .nf-more-menu.is-open {
+                transform: translateY(0);
+                visibility: visible;
+                pointer-events: auto;
+            }
+
+            .nf-more-handle {
+                width: 38px;
+                height: 4px;
+                margin: 0 auto 14px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.28);
+            }
+
+            .nf-more-title {
+                margin: 0 8px 8px;
+                color: #8f8f8f;
+                font-size: 0.7rem;
+                font-weight: 700;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+            }
+
+            .nf-more-item {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                width: 100%;
+                padding: 14px 12px;
+                background: transparent;
+                border: none;
+                border-radius: 12px;
+                color: #e5e5e5;
+                font-size: 0.98rem;
+                font-weight: 600;
+                text-align: left;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .nf-more-item svg {
+                width: 22px;
+                height: 22px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 1.9;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                flex: 0 0 auto;
+            }
+
+            .nf-more-item:active {
+                background: rgba(255, 255, 255, 0.08);
+            }
+
+            .nf-more-item.active {
+                color: #ffffff;
+                background: rgba(255, 255, 255, 0.09);
+            }
+
+            .nf-more-item.active::after {
+                content: '';
+                width: 8px;
+                height: 8px;
+                margin-left: auto;
+                border-radius: 50%;
+                background: var(--nf-red);
+            }
+
+            .content-stack.nf-sheet-open {
+                overflow: hidden !important;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .nf-hero-inner,
             #splashScreen .splash-logo {
@@ -4977,6 +5276,12 @@
 
             .card-item,
             .nf-hero-media img {
+                transition: none !important;
+            }
+
+            .nf-bottom-btn,
+            .nf-more-overlay,
+            .nf-more-menu {
                 transition: none !important;
             }
         }
@@ -5029,6 +5334,47 @@
             </div>
         </div>
     </header>
+
+    <nav class="nf-bottom-nav" id="nfBottomNav" aria-label="Navigazione principale mobile">
+        <button class="nf-bottom-btn active" id="nfBottomHome" type="button" onclick="setView('home')" aria-label="Home" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10.6 12 3l9 7.6"/><path d="M5.5 9.2V21h13V9.2"/><path d="M10 21v-6h4v6"/></svg>
+            <span>Home</span>
+        </button>
+        <button class="nf-bottom-btn is-type-active" id="nfBottomMovie" type="button" onclick="setType('movie')" aria-label="Film" aria-pressed="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M7.5 4.5v15M16.5 4.5v15M3 9.2h4.5M3 14.8h4.5M16.5 9.2H21M16.5 14.8H21"/></svg>
+            <span>Film</span>
+        </button>
+        <button class="nf-bottom-btn" id="nfBottomTv" type="button" onclick="setType('tv')" aria-label="Serie TV" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="7" width="19" height="13" rx="2"/><path d="m8 3 4 4 4-4"/></svg>
+            <span>Serie TV</span>
+        </button>
+        <button class="nf-bottom-btn" id="nfBottomList" type="button" onclick="setView('favorites')" aria-label="La mia lista">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.5 3h11a1 1 0 0 1 1 1v17l-6.5-4.2L5.5 21V4a1 1 0 0 1 1-1Z"/></svg>
+            <span>La mia lista</span>
+        </button>
+        <button class="nf-bottom-btn" id="nfBottomMore" type="button" aria-label="Altre sezioni" aria-expanded="false" aria-controls="nfMoreMenu">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="6.2" height="6.2" rx="1.6"/><rect x="13.8" y="4" width="6.2" height="6.2" rx="1.6"/><rect x="4" y="13.8" width="6.2" height="6.2" rx="1.6"/><rect x="13.8" y="13.8" width="6.2" height="6.2" rx="1.6"/></svg>
+            <span>Altro</span>
+        </button>
+    </nav>
+
+    <div class="nf-more-overlay" id="nfMoreOverlay" aria-hidden="true"></div>
+    <div class="nf-more-menu" id="nfMoreMenu" role="dialog" aria-modal="true" aria-labelledby="nfMoreMenuTitle">
+        <div class="nf-more-handle" aria-hidden="true"></div>
+        <div class="nf-more-title" id="nfMoreMenuTitle">Esplora</div>
+        <button class="nf-more-item" type="button" data-view="platforms">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20V11M10 20V4M16 20v-6M22 20H2"/></svg>
+            <span>Classifiche piattaforme</span>
+        </button>
+        <button class="nf-more-item" type="button" data-view="continue">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5l3.2 1.9"/></svg>
+            <span>Continua a guardare</span>
+        </button>
+        <button class="nf-more-item" type="button" data-view="consigliati">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.5 5.7 5.9.5-4.5 3.9 1.4 5.9L12 15.8 6.7 19l1.4-5.9L3.6 9.2l5.9-.5L12 3Z"/></svg>
+            <span>Consigliati per te</span>
+        </button>
+    </div>
 
     <div class="page-shell">
         <aside class="sidebar" id="sidebar">
@@ -6243,6 +6589,13 @@
 
     function renderConsigliatiSection() {
         const restartBtn = document.getElementById('quizRestartBtn');
+        const randomBtn = document.getElementById('randomBtn');
+        if (randomBtn) {
+            randomBtn.title = tasteProfile ? 'Titolo casuale scelto in base ai tuoi gusti' : 'Titolo casuale';
+            randomBtn.setAttribute('aria-label', tasteProfile
+                ? 'Scopri un titolo a caso in base ai tuoi gusti'
+                : 'Scopri un titolo a caso');
+        }
         if (!tasteProfile) {
             restartBtn.style.display = 'none';
             if (!quizAnswers || !quizAnswers.genreKeys) {
@@ -7045,12 +7398,161 @@
         return results[Math.floor(Math.random() * results.length)];
     }
 
+    /* ---------- Random basato sul quiz "Consigliati per te" ---------- */
+
+    function normalizzaLingueProfilo(lingue) {
+        const alias = { 'en-gb': 'en', 'en-us': 'en', 'it-it': 'it' };
+        const risultato = [];
+        (Array.isArray(lingue) ? lingue : []).forEach((lingua) => {
+            const codice = alias[String(lingua).toLowerCase()] || String(lingua).toLowerCase();
+            if (/^[a-z]{2}$/.test(codice) && !risultato.includes(codice)) risultato.push(codice);
+        });
+        return risultato;
+    }
+
+    function ordinamentoPerGusti(profilo) {
+        if (profilo.popolarita === 'nicchia') {
+            return { sortBy: 'vote_average.desc', voteCountMin: 15, maxPages: 25 };
+        }
+        if (profilo.popolarita === 'blockbuster') {
+            return { sortBy: 'popularity.desc', voteCountMin: 300, maxPages: 100 };
+        }
+        return { sortBy: 'popularity.desc', voteCountMin: 50, maxPages: 100 };
+    }
+
+    // Livello 0 = tutti i vincoli del quiz. Ogni livello successivo allenta i
+    // criteri più restrittivi, così il Random non resta mai a mani vuote.
+    function parametriDiscoverPerGusti(profilo, tipo, livello) {
+        const params = [];
+        const dateField = tipo === 'movie' ? 'primary_release_date' : 'first_air_date';
+        const generi = generiIdPerTipo(profilo.genreKeys || [], tipo);
+        const generiDaEvitare = generiIdPerTipo(profilo.avoidGenreKeys || [], tipo);
+
+        if (generi.length) params.push(`with_genres=${generi.join('|')}`);
+        if (generiDaEvitare.length) params.push(`without_genres=${generiDaEvitare.join(',')}`);
+
+        if (livello < 3) {
+            if (profilo.yearMin) params.push(`${dateField}.gte=${profilo.yearMin}-01-01`);
+            if (profilo.yearMax) params.push(`${dateField}.lte=${profilo.yearMax}-12-31`);
+        }
+
+        if (livello < 2 && tipo === 'movie') {
+            if (profilo.runtimeMin) params.push(`with_runtime.gte=${profilo.runtimeMin}`);
+            if (profilo.runtimeMax) params.push(`with_runtime.lte=${profilo.runtimeMax}`);
+        }
+
+        if (livello < 1) {
+            const lingue = normalizzaLingueProfilo(profilo.languages);
+            if (lingue.length) params.push(`with_original_language=${lingue.join('|')}`);
+            if (Array.isArray(profilo.platformIds) && profilo.platformIds.length) {
+                params.push(`with_watch_providers=${profilo.platformIds.join('|')}`);
+                params.push('watch_region=IT');
+                params.push('with_watch_monetization_types=flatrate');
+            }
+        }
+
+        // Il filtro età di TMDB è affidabile solo per i film.
+        if (livello < 2 && tipo === 'movie' && profilo.certificationMax) {
+            params.push('certification_country=US');
+            params.push(`certification.lte=${profilo.certificationMax}`);
+        }
+
+        if (livello < 4 && profilo.voteMin) {
+            params.push(`vote_average.gte=${profilo.voteMin}`);
+        }
+
+        if (livello < 2 && tipo === 'tv' && profilo.tvType !== null && profilo.tvType !== undefined) {
+            params.push(`with_type=${profilo.tvType}`);
+        }
+
+        return params.join('&');
+    }
+
+    async function pescaTitoloDaDiscover(tipo, params, opzioni = {}) {
+        const sortBy = opzioni.sortBy || 'popularity.desc';
+        const voteCountMin = opzioni.voteCountMin ?? 25;
+        const maxPages = opzioni.maxPages || 100;
+        const extra = String(params || '').replace(/^&+/, '');
+        const baseUrl = `https://api.themoviedb.org/3/discover/${tipo}?api_key=${API_KEY}&language=it-IT&include_adult=false&sort_by=${sortBy}&vote_count.gte=${voteCountMin}${extra ? `&${extra}` : ''}`;
+
+        try {
+            const primaRes = await fetch(`${baseUrl}&page=1`);
+            if (!primaRes.ok) return null;
+            const primaData = await primaRes.json();
+            const totalPages = Math.min(Math.max(primaData.total_pages || 1, 1), maxPages);
+            const pagina = Math.floor(Math.random() * totalPages) + 1;
+
+            let risultati = primaData.results || [];
+            if (pagina !== 1) {
+                const res = await fetch(`${baseUrl}&page=${pagina}`);
+                if (!res.ok) return null;
+                risultati = (await res.json()).results || [];
+            }
+
+            const validi = (risultati || []).filter(item => item && item.id);
+            if (!validi.length) return null;
+
+            // Evita di riproporre subito il titolo già aperto, se possibile.
+            let pool = validi;
+            if (opzioni.chiaveEsclusa) {
+                const altri = pool.filter(item => getContinueKey({ ...item, type: tipo }) !== opzioni.chiaveEsclusa);
+                if (altri.length) pool = altri;
+            }
+            return pool[Math.floor(Math.random() * pool.length)] || null;
+        } catch {
+            return null;
+        }
+    }
+
+    async function estraiTitoloCasualeDaGusti(profilo) {
+        if (!profilo) return null;
+
+        const tipi = profilo.type === 'both' ? ['movie', 'tv'] : [profilo.type === 'tv' ? 'tv' : 'movie'];
+        for (let i = tipi.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [tipi[i], tipi[j]] = [tipi[j], tipi[i]];
+        }
+
+        const { sortBy, voteCountMin, maxPages } = ordinamentoPerGusti(profilo);
+        const chiaveEsclusa = elementoSelezionato ? getContinueKey(elementoSelezionato) : '';
+        const haGeneriProfilo = (profilo.genreKeys || []).length > 0;
+        const queryGiaProvate = new Set();
+
+        for (let livello = 0; livello <= 5; livello++) {
+            for (const tipo of tipi) {
+                // Se il quiz indica generi che su questo tipo non esistono in TMDB
+                // (es. horror per le serie), evita risultati fuori tema quando
+                // l'utente ha scelto sia film sia serie.
+                if (haGeneriProfilo && profilo.type === 'both' && !generiIdPerTipo(profilo.genreKeys, tipo).length) {
+                    continue;
+                }
+                const params = parametriDiscoverPerGusti(profilo, tipo, livello);
+                // Alcuni livelli di allentamento possono produrre la stessa query
+                // (es. profilo senza lingue/piattaforme): evitiamo richieste doppie.
+                const firma = `${tipo}:${sortBy}:${voteCountMin}:${params}`;
+                if (queryGiaProvate.has(firma)) continue;
+                queryGiaProvate.add(firma);
+
+                const item = await pescaTitoloDaDiscover(tipo, params, { sortBy, voteCountMin, maxPages, chiaveEsclusa });
+                if (item) return { ...item, type: tipo };
+            }
+        }
+
+        return null;
+    }
+
     async function apriTitoloRandom() {
         setRandomButtonLoading(true);
         try {
             let item = null;
 
-            if (currentView === 'favorites') {
+            // Se l'utente ha completato il quiz "Consigliati per te", il Random
+            // pesca sempre dal catalogo in base alle risposte del sondaggio.
+            if (tasteProfile) {
+                item = await estraiTitoloCasualeDaGusti(tasteProfile);
+            }
+
+            if (!item && currentView === 'favorites') {
                 // Nei preferiti peschiamo dalla lista personale dell'utente
                 const candidati = favorites.filter(f => (f.type || currentType) === currentType);
                 const pool = candidati.length ? candidati : favorites;
@@ -7059,10 +7561,10 @@
                     return;
                 }
                 item = pool[Math.floor(Math.random() * pool.length)];
-            } else if (currentView === 'platforms') {
+            } else if (!item && currentView === 'platforms') {
                 // In Top 10 restiamo sulla piattaforma selezionata, ma peschiamo da tutto il suo catalogo IT
                 item = await estraiTitoloCasualeDaDiscover(`&with_watch_providers=${currentPlatformId}&watch_region=IT&with_watch_monetization_types=flatrate`);
-            } else {
+            } else if (!item) {
                 // Home: rispetta i filtri attivi in sidebar (genere, servizio, anno) su tutto il catalogo
                 let params = '';
                 if (selectedGenreId) params += `&with_genres=${selectedGenreId}`;
@@ -8492,7 +8994,11 @@ async function fetchRecommendations(id, mediaType = currentType) {
                     </button>
                     <button class="btn-favorite" id="btnFavorite" type="button" onclick="toggleFavorite(elementoSelezionato)" tabindex="0" aria-label="Aggiungi ai preferiti" aria-pressed="false">♡</button>
                     <button class="btn-progress" id="btnProgress" type="button" onclick="apriProgressoModal()" tabindex="0" aria-label="Salva posizione visione" style="display:none;">⏱</button>
-                    <button class="btn-action btn-trailer" type="button" onclick="showTrailer()" tabindex="0">Trailer</button>
+                    <button class="btn-action btn-trailer" type="button" onclick="showTrailer()" tabindex="0" aria-label="Guarda il trailer" title="Guarda il trailer">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z" fill="currentColor"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -8743,6 +9249,78 @@ async function fetchRecommendations(id, mediaType = currentType) {
         document.querySelectorAll('.card-item[data-nf-id]').forEach(nfQueueCardLogo);
     }
 
+    /* ---------- Bottom navigation mobile ---------- */
+    function nfSyncBottomNav() {
+        if (typeof currentView === 'undefined' || typeof currentType === 'undefined') return;
+
+        const homeBtn = nf$('nfBottomHome');
+        const listBtn = nf$('nfBottomList');
+        const moreBtn = nf$('nfBottomMore');
+        const movieBtn = nf$('nfBottomMovie');
+        const tvBtn = nf$('nfBottomTv');
+
+        [homeBtn, listBtn, moreBtn].forEach((btn) => {
+            btn?.classList.remove('active');
+            btn?.removeAttribute('aria-current');
+        });
+
+        let attivo = null;
+        if (currentView === 'home') attivo = homeBtn;
+        else if (currentView === 'favorites') attivo = listBtn;
+        else if (['platforms', 'continue', 'consigliati'].includes(currentView)) attivo = moreBtn;
+
+        if (attivo) {
+            attivo.classList.add('active');
+            attivo.setAttribute('aria-current', 'page');
+        }
+
+        movieBtn?.classList.toggle('is-type-active', currentType === 'movie');
+        tvBtn?.classList.toggle('is-type-active', currentType === 'tv');
+        movieBtn?.setAttribute('aria-pressed', String(currentType === 'movie'));
+        tvBtn?.setAttribute('aria-pressed', String(currentType === 'tv'));
+
+        document.querySelectorAll('.nf-more-item[data-view]').forEach((btn) => {
+            btn.classList.toggle('active', btn.dataset.view === currentView);
+        });
+    }
+
+    function nfOpenMoreMenu() {
+        nf$('nfMoreMenu')?.classList.add('is-open');
+        nf$('nfMoreOverlay')?.classList.add('is-open');
+        nf$('nfBottomMore')?.setAttribute('aria-expanded', 'true');
+        document.querySelector('.content-stack')?.classList.add('nf-sheet-open');
+    }
+
+    function nfCloseMoreMenu() {
+        nf$('nfMoreMenu')?.classList.remove('is-open');
+        nf$('nfMoreOverlay')?.classList.remove('is-open');
+        nf$('nfBottomMore')?.setAttribute('aria-expanded', 'false');
+        document.querySelector('.content-stack')?.classList.remove('nf-sheet-open');
+    }
+
+    function nfMoreGo(view) {
+        nfCloseMoreMenu();
+        if (typeof window.setView === 'function') window.setView(view);
+    }
+
+    function nfInitBottomNav() {
+        nf$('nfBottomMore')?.addEventListener('click', () => {
+            if (nf$('nfMoreMenu')?.classList.contains('is-open')) nfCloseMoreMenu();
+            else nfOpenMoreMenu();
+        });
+        nf$('nfMoreOverlay')?.addEventListener('click', nfCloseMoreMenu);
+        document.querySelectorAll('.nf-more-item[data-view]').forEach((btn) => {
+            btn.addEventListener('click', () => nfMoreGo(btn.dataset.view));
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') nfCloseMoreMenu();
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900) nfCloseMoreMenu();
+        }, { passive: true });
+        nfSyncBottomNav();
+    }
+
     /* ---------- Header trasparente -> solido ---------- */
     function nfInitHeaderScroll() {
         const header = nf$('nfHeader');
@@ -8765,6 +9343,8 @@ async function fetchRecommendations(id, mediaType = currentType) {
             box.classList.toggle('is-open', open);
             controls?.classList.toggle('nf-searching', open);
             header?.classList.toggle('nf-searching', open);
+            nf$('nfBottomNav')?.classList.toggle('is-search-hidden', open);
+            if (open) nfCloseMoreMenu();
         };
 
         box.addEventListener('click', (event) => {
@@ -9248,7 +9828,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
 
     function nfEnsureAllRows() {
         const rows = document.querySelectorAll(
-            '#resultsList, #sagheRow, #favoritesGrid, #continueGrid, #platformGrid, #recsGrid, .consigliati-grid, .nf-extra-rows .results-grid'
+            '#resultsList, #sagheRow, #continueGrid, #platformGrid, #recsGrid, .consigliati-grid, .nf-extra-rows .results-grid'
         );
         rows.forEach((row) => {
             // Le classifiche sono una griglia multiriga, non un carosello.
@@ -9289,9 +9869,12 @@ async function fetchRecommendations(id, mediaType = currentType) {
         window.setView = function (view) {
             const result = originalSetView.apply(this, arguments);
             document.body.classList.toggle('nf-home', view === 'home');
+            const searchInput = nf$('searchInput');
+            document.body.classList.toggle('nf-has-query', !!searchInput?.value.trim());
             const stack = document.querySelector('.content-stack');
             if (stack) stack.scrollTop = 0;
             nfCloseSidebarDrawer();
+            nfSyncBottomNav();
             if (view === 'home') {
                 nfRefreshBillboard();
                 nfLoadExtraRows(false);
@@ -9319,6 +9902,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
         nfInitHeaderScroll();
         nfInitSearch();
         nfInitViewHook();
+        nfInitBottomNav();
         nfInitRowObserver();
         nfInitFilterAutoClose();
         nfInitLoadMoreResetHooks();
@@ -9333,6 +9917,7 @@ async function fetchRecommendations(id, mediaType = currentType) {
             window.setType = function () {
                 const result = originalSetType.apply(this, arguments);
                 nfResetMoreRows();
+                nfSyncBottomNav();
                 setTimeout(() => nfLoadExtraRows(true), 500);
                 return result;
             };
